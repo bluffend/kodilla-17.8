@@ -1,6 +1,5 @@
 var http = require('http');
 var fs = require('fs');
-
 var server = http.createServer();
 
 server.on('request', function (request, response) {
@@ -12,10 +11,17 @@ server.on('request', function (request, response) {
             response.end();
         });
     } else {
-        response.statusCode = 404;
-        response.write('<img src="https://www.howtogeek.com/wp-content/uploads/2018/05/2018-06-03-1.png" alt="Smiley face" height="213" width="462">');
-        response.end();
+        fs.readFile('./image/404error.png', function (err, content) {
+            if (err) {
+                response.writeHead(400, { 'Content-type': 'text/html' })
+                console.log(err);
+                response.end("No such image");
+            } else {
+                response.writeHead(200, { 'Content-type': 'image/png' });
+                response.end(content);
+            }
+        });
     }
 });
 
-server.listen(8080);
+server.listen(9000);
